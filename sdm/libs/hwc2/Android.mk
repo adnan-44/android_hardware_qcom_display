@@ -11,11 +11,17 @@ LOCAL_MODULE_TAGS             := optional
 LOCAL_C_INCLUDES              := $(common_includes) \
                                  $(kernel_includes)
 LOCAL_HEADER_LIBRARIES        := display_headers
+LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
 
 LOCAL_CFLAGS                  := -Wno-missing-field-initializers -Wno-unused-parameter \
                                  -fcolor-diagnostics\
                                  -DLOG_TAG=\"SDM\" $(common_flags) \
                                  -I $(display_top)/sdm/libs/hwc
+
+ifeq ($(TARGET_KERNEL_VERSION),$(filter $(TARGET_KERNEL_VERSION),4.14 4.19))
+LOCAL_CFLAGS += -DTARGET_MIN_KERNEL_4_14
+endif
+
 ifeq ($(TARGET_EXCLUDES_DISPLAY_PP), true)
 LOCAL_CFLAGS += -DEXCLUDE_DISPLAY_PP
 endif
